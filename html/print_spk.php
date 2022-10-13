@@ -25,6 +25,10 @@ if($_SESSION["LOGINIDUS_MT"] == "002028" OR //Imam Fatoni
     $IP_ADDRESS     = $_SESSION["IP_ADDRESS_MT"];
     $PC_NAME        = $_SESSION["PC_NAME_MT"];
     $KODE_PERBAIKAN = $_GET["id"];
+    
+    if (isset($_GET['printed']) && isset($_GET['state']) && $_GET['state'] == 0 ){
+        GetQuery("update t_perbaikan set STATUS_READ='2' where KODE_PERBAIKAN = '$KODE_PERBAIKAN'"); 
+    }
 
     $result = GetQuery(
         "select t.KODE_PERBAIKAN,
@@ -41,11 +45,12 @@ if($_SESSION["LOGINIDUS_MT"] == "002028" OR //Imam Fatoni
         extract($row);
     }
 
+
     $result1 = $db1->prepare(
         "insert into t_userlog (KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS) 
         values ('$ID_USER','$IP_ADDRESS','$PC_NAME','$DINO','Laporan','Cetak Laporan Maintenance','Cetak Laporan Maintenance Kode $KODE_PERBAIKAN')"); 
     $result1->execute();
-    
+
     $result2 = GetQuery(
         "select d.NAMA_DEPARTEMEN,
                 b.NAMA_BARANG,
@@ -674,8 +679,7 @@ if($_SESSION["LOGINIDUS_MT"] == "002028" OR //Imam Fatoni
     // $pdf->Cell(38,1,"FRM-ENG-005-Rev.02",0,0,"L");
 
     $pdf->Output("SPK - " . $KODE_PERBAIKAN . ".pdf","I");
-
-}
+}   
 ?><script>alert('ACCESS DENIED !');</script><?php
 ?><script>window.close()</script><?php
 die(0);

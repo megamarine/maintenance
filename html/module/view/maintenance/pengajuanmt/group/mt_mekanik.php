@@ -23,7 +23,7 @@ $result = GetQuery(
             u.NAMA_USER
        FROM t_perbaikan p
        JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
-  LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
+       LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
        JOIN m_perusahaan h ON p.KODE_PERUSAHAAN = h.KODE_PERUSAHAAN
        JOIN m_departemen d ON p.KODE_DEPARTEMEN = d.KODE_DEPARTEMEN
        JOIN m_user u ON p.USER_REQ = u.KODE_USER
@@ -32,7 +32,7 @@ $result = GetQuery(
             p.STATUS_HAPUS = 0 and 
             (b.KODE_JENIS = 2 or p.KODE_DEPARTEMEN = '$KODE_DEPARTEMEN') and 
             date(p.TGL_START) between '$PERIODE' and '$PERIODE2' 
-   order by p.KODE_PERBAIKAN desc");
+   order by p.KODE_PERBAIKAN, p.TGL_START desc");
 
 while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
 {

@@ -62,17 +62,20 @@ elseif ($_SESSION["LOGINDEP_MT"] == "DEPT-0011"){
                 <!--/ END 2nd Level Menu -->
             </li>
             <!-- <?php
-            if ($_SESSION["LOGINDEP_MT"] != "DEPT-0033") {
+            if (in_array($_SESSION["LOGINDEP_MT"],array('DEPT-0040','DEPT-0101'))) {
                 ?>
                 <li >
-                    <a href="pengajuanproyek">
-                        <span class="figure"><i class="fas fa-pallet fa-lg"></i></span>
-                        <span class="text">Proyek Baru</span>
-                    </a>
+                <a href="v_mekanik" data-target="#maintenance" data-toggle="submenu" data-parent=".topmenu">
+                    <span class="figure"><i class="fa fa-wrench fa-lg"></i></span>
+                    <span class="text">Maint. Mekanik</span>
+                    <span class="number"><span class="label label-danger"><?php echo $COUNT; ?></span></span>
+                </a>
+                <!--/ END 2nd Level Menu -->
                 </li>
                 <?php
             }
             ?> -->
+            
             <li >
                 <a href="pengajuanmt" data-target="#maintenance" data-toggle="submenu" data-parent=".topmenu">
                     <span class="figure"><i class="fa fa-wrench fa-lg"></i></span>
