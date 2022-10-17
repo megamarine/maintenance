@@ -60,13 +60,20 @@ if (isset($_POST['reload_user'])){
     echo json_encode($json_data);
             
 } else if (isset($_POST['save_user'])){
-        $KODE_TEKNISI = $_POST["kode_teknisi"];
+        
         $KODE_PERBAIKAN = $_POST['kode_perbaikan'];
+        $KODE_TEKNISI = $_POST["kode_teknisi"];
         if ($KODE_TEKNISI != "") {
-            GetQuery(
-                "insert into d_perbaikan (KODE_PERBAIKAN,KODE_TEKNISI) 
-                values ('$KODE_PERBAIKAN','$KODE_TEKNISI')");
-            $data = array('status' => 'success');
+
+            $sth = GetQuery("select count(*) jml from d_perbaikan 
+                where KODE_PERBAIKAN='$KODE_PERBAIKAN' and KODE_TEKNISI='$KODE_TEKNISI' ");
+            $row = $sth->fetch(PDO::FETCH_ASSOC);
+            if (!isset($row['jml'])){
+                GetQuery(
+                    "insert into d_perbaikan (KODE_PERBAIKAN,KODE_TEKNISI) 
+                    values ('$KODE_PERBAIKAN','$KODE_TEKNISI')");
+                $data = array('status' => 'success');
+            } 
             echo json_encode($data);
         }
 } elseif(isset($_POST["deleteUsr"])){
@@ -141,7 +148,8 @@ if (isset($_POST['reload_user'])){
     $result4 = GetQuery("select *,
                             DATE_FORMAT(TGL_MULAI, '%d %M %Y') as TGL_PERBAIKAN,
                             DATE_FORMAT(TGL_MULAI, '%H:%i:%s') as JAM_PERBAIKAN
-                       from d_progress
+                       from d_progress d
+                       left outer join m_teknisi t on t.KODE_TEKNISI = d.KODE_TEKNISI
                       where KODE_PERBAIKAN = '$KODE_PERBAIKAN'
                    order by TGL_MULAI");
 
@@ -150,6 +158,7 @@ if (isset($_POST['reload_user'])){
         array_push($data,
             array(
                 "action" => $row['KODE_DETAIL'],
+                "teknisi" => $row['NAMA_TEKNISI'],
                 "date_from" => $row['TGL_MULAI'],
                 "date_to" => $row['TGL_SELESAI'],
                 "durasi" => $row['DURASI'],
@@ -181,22 +190,36 @@ if (isset($_POST['reload_user'])){
     $TGL_END     = $_POST["TGL_END"];
     $TGL_START   = $_POST["TGL_START"];
     $KODE_PERBAIKAN = $_POST["KODE_PERBAIKAN"];
+    $KODE_TEKNISI = $_POST["KODE_TEKNISI"];
     $DINO        = date('Y-m-d H:i:s');
 
-    GetQuery(
-        "update t_perbaikan set STATUS_PERBAIKAN = 'Belum', PROGRESS = 0 where KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
-    
-    GetQuery(
-        "insert into d_progress (KODE_DETAIL,KODE_PERBAIKAN,DURASI,HASIL_PERBAIKAN,TGL_MULAI,TGL_SELESAI) 
-        values ('$KODE_DETAIL','$KODE_PERBAIKAN','$DURASI','$SOLUSI','$TGL_START','$TGL_END')");
-
-    InsertData(
-            "t_userlog",
-            "KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS",
-            "'$ID_USER1','$IP_ADDRESS','$PC_NAME','$DINO','Maintenance','Progress Berjalan','Kode $KODE_PERBAIKAN'");
-
-    $data = array('status' => 'success');
-    echo json_encode($data);
+     // Kode Teknisi
+     if (isset($KODE_TEKNISI)) {
+        $sth = GetQuery("select count(*) jml from d_perbaikan 
+            where KODE_PERBAIKAN='$KODE_PERBAIKAN' and KODE_TEKNISI='$KODE_TEKNISI' ");
+        $row = $sth->fetch(PDO::FETCH_ASSOC);
+        if (!$row['jml']){
+            GetQuery(
+                "insert into d_perbaikan (KODE_PERBAIKAN,KODE_TEKNISI) 
+                values ('$KODE_PERBAIKAN','$KODE_TEKNISI')");
+            $data = array('status' => 'success');
+        }
+            GetQuery(
+                "update t_perbaikan set STATUS_PERBAIKAN = 'Belum', PROGRESS = 0 where KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
+            
+            GetQuery(
+                "insert into d_progress (KODE_DETAIL,KODE_PERBAIKAN,DURASI,HASIL_PERBAIKAN,TGL_MULAI,TGL_SELESAI,KODE_TEKNISI) 
+                values ('$KODE_DETAIL','$KODE_PERBAIKAN','$DURASI','$SOLUSI','$TGL_START','$TGL_END','$KODE_TEKNISI')");
+            
+            
+            InsertData(
+                    "t_userlog",
+                    "KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS",
+                    "'$ID_USER1','$IP_ADDRESS','$PC_NAME','$DINO','Maintenance','Progress Berjalan','Kode $KODE_PERBAIKAN'");
+        
+            $data = array('status' => 'success');
+            echo json_encode($data); 
+        }
 
 } elseif (isset($_POST['delRepair'])){
     $KODE_DETAIL = $_POST['KODE_DETAIL'];
@@ -220,6 +243,21 @@ if (isset($_POST['reload_user'])){
             $ID_USER1           = $_SESSION["LOGINIDUS_MT"];
             $IP_ADDRESS         = $_SESSION["IP_ADDRESS_MT"];
             $PC_NAME            = $_SESSION["PC_NAME_MT"];
+            $KODE_TEKNISI = $_POST["KODE_TEKNISI"];
+
+            // Kode Teknisi
+            if (isset($KODE_TEKNISI)) {
+                $sth = GetQuery("select count(*) jml from d_perbaikan 
+                where KODE_PERBAIKAN='$KODE_PERBAIKAN' and KODE_TEKNISI='$KODE_TEKNISI' ");
+            $row = $sth->fetch(PDO::FETCH_ASSOC);
+            if (!$row['jml']){
+                GetQuery(
+                    "insert into d_perbaikan (KODE_PERBAIKAN,KODE_TEKNISI) 
+                    values ('$KODE_PERBAIKAN','$KODE_TEKNISI')");
+                $data = array('status' => 'success');
+                } 
+            }
+
                 
             
             $resultHitung = GetQuery(

@@ -44,6 +44,12 @@ if (isset($_POST["cari"]))
             .state2 {background-color: #f44336;} /* Red */ 
             .state3 {background-color: #e7e7e7; color: black;} /* Gray */ 
         </style>
+
+        <script type="text/javascript">
+            openPage = function() {
+                location.href = "export_pengajuanmt.php?PERIODE="+$("#datepicker1").val()+"&"+"PERIODE2="+$("#datepicker2").val()+"&"+"state="+$("#state").val();
+            }
+        </script>
     </head>
     <!--/ END Head -->
     <!-- START Body -->
@@ -86,7 +92,7 @@ if (isset($_POST["cari"]))
                         <a href="tambah_pengajuanmt_new" type="button" class="btn btn-success"><i class="ico-plus2"></i> Tambah Pengajuan</a>
                     </div>
                     <div class="col-lg-3" align="right">
-                        <a href="export_pengajuanmt.php?PERIODE=<?php echo $PERIODE; ?>&PERIODE2=<?php echo $PERIODE2; ?>" type="button" class="btn btn-warning" style="color: black;"><i class="fa fa-print fa-lg"></i> Export Excel</a>
+                        <a href="javascript:openPage()" type="button" class="btn btn-warning" style="color: black;"><i class="fa fa-print fa-lg"></i> Export Excel</a>
                     </div>                  
                 </div>
             </div>
@@ -100,6 +106,16 @@ if (isset($_POST["cari"]))
                 <div class="col-md-3">
                         <label for="PERIODE2" style="color: transparent;">.</label>
                         <input type="text" class="form-control" name="PERIODE2" id="datepicker2" value="<?php echo $PERIODE2; ?>" />
+                </div>
+                <div class="col-md-2">
+                       <label for="state" style="color: transparent;">.</label>
+                       <select class="form-control" name="state" id="state">
+                            <option value="all">All</option>
+                            <option value="new">New</option>
+                            <option value="confirm">Confrim (Has Print)</option>
+                            <option value="progress">Progress</option>
+                            <option value="pending">Pending</option>
+                        </select>
                 </div>
                 <div class="form-group">
                     <label style="color: transparent;">.</label><br>
@@ -247,6 +263,7 @@ if (isset($_POST["cari"]))
                                 return $.extend( {}, d, {
                                     awal: $("#datepicker1").val(),
                                     akhir : $("#datepicker2").val(),
+                                    state: $("#state").val()
                                 });
                             }
                         },
@@ -260,7 +277,9 @@ if (isset($_POST["cari"]))
                             {
                                 data: 'action',
                             },
-                            {data: 'state'},
+                            {data: 'state',
+                             width:'20%',
+                            },
                             {data: 'teknisi'},
                             {data: 'code'},
                             {data: 'company'},

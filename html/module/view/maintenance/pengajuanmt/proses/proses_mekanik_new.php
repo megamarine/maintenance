@@ -33,6 +33,7 @@ $result4 = GetQuery("select *,
     $(document).ready(function () {
 
         $('#perbaikan').hide();
+        $('#save-perbaikan').hide();
        
         
         $('#STATUS_PERBAIKAN').change(function () {
@@ -40,9 +41,12 @@ $result4 = GetQuery("select *,
             if (status=='Belum'){
                 $('#save-perbaikan').hide();
                 $('#perbaikan').show();
-            } else {
+            } else if (status=='Selesai') {
                 $('#perbaikan').hide();
                 $('#save-perbaikan').show();
+            } else{
+                $('#save-perbaikan').hide();
+                $('#perbaikan').hide();
             }
         })
 
@@ -216,12 +220,12 @@ $result4 = GetQuery("select *,
                             },
                             { 
                                 className: "dt-center",
-                                width: "25%",
+                                width: "15%",
                                 targets: [1],
                             },
                             { 
                                 className: "dt-center",
-                                width: "20%",
+                                width: "25%",
                                 targets: [2],
                             },
                             { 
@@ -233,6 +237,11 @@ $result4 = GetQuery("select *,
                                 className: "dt-center",
                                 width: "20%",
                                 targets: [4],
+                            },
+                            { 
+                                className: "dt-center",
+                                width: "20%",
+                                targets: [5],
                             }
                         ],   
                         paging: false,
@@ -240,6 +249,7 @@ $result4 = GetQuery("select *,
                         serverSide: true,
                         columns: [
                             {data: 'action'},
+                            {data: 'teknisi'},
                             {data: 'date_from'},
                             {data: 'date_to'},
                             {data: 'durasi'},
@@ -249,29 +259,40 @@ $result4 = GetQuery("select *,
 
                 $('#add_task').click(function (e) {
                     e.preventDefault();
-                    $.ajax({
-                        type: 'POST',
-                        url: 'api/api_mekanik',
-                        dataType: 'json',
-                        data: {
-                            tambahPerbaikan: true,
-                            SOLUSI: $('#SOLUSI').val(),
-                            SARAN: $('#SARAN').val(),
-                            DURASI: $('#DURASI').val(),
-                            BAGIAN: $('#BAGIAN').val(),
-                            TGL_START: $('#datepicker1').val()+' '+$('#time-picker').val(),
-                            TGL_END: $('#datepicker2').val()+' '+$('#time-picker2').val(),
-                            KODE_PERBAIKAN: $('#kode_perbaikan').val(),
-                        },
-                        success: function (data) {
-                            $('#SOLUSI').val("");
-                            $('#SARAN').val("");
-                            $('#DURASI').val("");
-                            $('#BAGIAN').val("");
-                            repairing.ajax.reload();
-                        }
+                    if ($('#KODE_TEKNISI').val() === ""){
+                        alert("Teknisi Harus Diisi ");
+                    } else {
+                        $.ajax({
+                            type: 'POST',
+                            url: 'api/api_mekanik',
+                            dataType: 'json',
+                            data: {
+                                tambahPerbaikan: true,
+                                SOLUSI: $('#SOLUSI').val(),
+                                SARAN: $('#SARAN').val(),
+                                DURASI: $('#DURASI').val(),
+                                KODE_TEKNISI: $('#KODE_TEKNISI').val(),
+                                BAGIAN: $('#BAGIAN').val(),
+                                TGL_START: $('#datepicker1').val()+' '+$('#time-picker').val(),
+                                TGL_END: $('#datepicker2').val()+' '+$('#time-picker2').val(),
+                                KODE_PERBAIKAN: $('#kode_perbaikan').val(),
+                                
+                            },
+                            success: function (data) {
+                                $('#SOLUSI').val("");
+                                $('#SARAN').val("");
+                                $('#DURASI').val("");
+                                $('#BAGIAN').val("");
+                                $('#datepicker1').val("");
+                                $('#datepicker2').val("");
+                                $('#time-picker').val("");
+                                $('#time-picker2').val("");
+                                repairing.ajax.reload();
+                                table.ajax.reload();
+                            }
+                        });
+                    }
                     });
-                });
 
                 $(document).on('click', '#del-repair', function(event){
                         const kode = $(event.currentTarget).data('id');
@@ -293,6 +314,7 @@ $result4 = GetQuery("select *,
             //Save Form
 
             $("#form-perbaikan").submit(function(e) {
+
                     e.preventDefault(); // avoid to execute the actual submit of the form.
                     var form = $(this).serializeArray();
                     form.push({name: "simpan2", value: true});
@@ -348,7 +370,6 @@ $result4 = GetQuery("select *,
 
 <div class="row">
     <div class="col-lg-12">
-        <h3>Info</h3>
         <hr>
         <form id="form-perbaikan" method="POST">
             <input id="kode_perbaikan" name="kode_perbaikan" type="hidden" value="<?php echo $KODE_PERBAIKAN; ?>"
@@ -428,6 +449,31 @@ $result4 = GetQuery("select *,
                 </div>
             
                     <h3>Jadwal Perbaikan</h3>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <div>
+                                    <label for="KODE_TEKNISI">User yang memperbaiki / Teknisi <span class="text-danger">*</span></label>
+                                    <select name="KODE_TEKNISI" class="form-control" id="KODE_TEKNISI" required>
+                                        <option value="">Pilih Karyawan</option>
+                                        <?php
+                                        if ($KODE_JENIS == 2) {
+                                            $result = GetQuery("select * from m_teknisi where KODE_JENIS = '$KODE_JENIS' and KODE_PERUSAHAAN = '$KODE_PERUSAHAAN' and STS_AKTIF = 0 order by NAMA_TEKNISI");
+                                        } else {
+                                            $result = GetQuery("select * from m_teknisi where KODE_JENIS = '$KODE_JENIS' and STS_AKTIF = 0 order by NAMA_TEKNISI");
+                                        }
+                                        while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
+                                            ?>
+                                            <option value="<?php echo $row["KODE_TEKNISI"]; ?>"<?php if($KODE_TEKNISI == $row["KODE_TEKNISI"]) { echo "selected"; } ?>><?php echo $row["NAMA_TEKNISI"]; ?></option>
+                                            <?php
+                                        }
+                                        ?>
+                                    </select>
+                                </div>                         
+                            </div>
+                                
+                        </div>
+                    </div>
                     <div class="row">
                         <div class="col-md-3">
                             <div class="form-group">
@@ -536,36 +582,7 @@ $result4 = GetQuery("select *,
                 </ul>
                 <div class="tab-content panel">
                     <div class="tab-pane active" id="tab1">
-                            <form id="form_user" method="post">
-                                <div class="row">
-                                    <div class="col-md-3">
-                                        <div >
-                                            <label for="KODE_TEKNISI">User yang memperbaiki / Teknisi <span class="text-danger">*</span></label>
-                                            <select name="KODE_TEKNISI" id="KODE_TEKNISI" class="form-control">
-                                                <option value="">Pilih Karyawan</option>
-                                                <?php
-                                                if ($KODE_JENIS == 2) {
-                                                    $result = GetQuery("select * from m_teknisi where KODE_JENIS = '$KODE_JENIS' and KODE_PERUSAHAAN = '$KODE_PERUSAHAAN' and STS_AKTIF = 0 order by NAMA_TEKNISI");
-                                                } else {
-                                                    $result = GetQuery("select * from m_teknisi where KODE_JENIS = '$KODE_JENIS' and STS_AKTIF = 0 order by NAMA_TEKNISI");
-                                                }
-                                                while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-                                                    ?>
-                                                    <option value="<?php echo $row["KODE_TEKNISI"]; ?>"<?php if($KODE_TEKNISI == $row["KODE_TEKNISI"]) { echo "selected"; } ?>><?php echo $row["NAMA_TEKNISI"]; ?></option>
-                                                    <?php
-                                                }
-                                                ?>
-                                            </select>
-                                        </div>                         
-                                    </div>
-                                    <div class="col-md-2">
-                                        <div>
-                                            <label style="color:transparent">.</label><br>
-                                            <button type="button" id="simpan_user" name="simpan_user"  class="btn btn-success"><i class="ico-plus2"></i> Tambah</button>
-                                        </div>         
-                                    </div>
-                                </div>
-                            </form>
+                            
                             <br />
                             <div class="panel panel-default">
                                 <table id="user-table">
@@ -629,6 +646,7 @@ $result4 = GetQuery("select *,
                                     <thead>
                                         <tr>
                                             <th>Opsi</th>
+                                            <th>Teknisi</th>
                                             <th>Tanggal Mulai</th>
                                             <th>Tanggal Selesai</th>
                                             <th>Durasi</th>

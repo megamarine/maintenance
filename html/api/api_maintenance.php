@@ -5,7 +5,8 @@ $length = $_REQUEST['length'] ? intval($_REQUEST['length']): 10;
 $page = $_REQUEST['start'] ? intval($_REQUEST['start']): 0;
 $awal = $_REQUEST['awal'];
 $akhir = $_REQUEST['akhir'];
-if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
+$state = $_REQUEST['state'];
+if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($state != 'all') ){
     
     $search = $_REQUEST['search']['value'];
     $cols = array(
@@ -22,6 +23,18 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
         $search = $search." and date(p.TGL_START) between '$awal' and '$akhir'";
     }
 
+    if ($state != 'all') {
+        if ($state == 'new') {
+            $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS_READ = 0";
+        } elseif ($state == 'confirm') {
+            $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS_READ = 2";
+        } elseif ($state == 'progress') {
+            $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS_READ = 1";
+        } elseif ($state == 'pending') {
+            $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS_READ = 3";
+        }
+    }
+
     $result = GetQuery(
         "Select p.*,
                 DATE_FORMAT(TGL_START, '%d %M %Y') as TGL_START,
@@ -34,6 +47,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
                 tns.NAMA_TEKNISI,
                 h.NAMA_PERUSAHAAN,
                 d.NAMA_DEPARTEMEN,
+                p.KODE_DEPARTEMEN,
                 b.NAMA_BARANG,
                 i.NAMA_UNIT,
                 j.NAMA_JENIS,
@@ -95,6 +109,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
         tns.NAMA_TEKNISI,
         h.NAMA_PERUSAHAAN,
         d.NAMA_DEPARTEMEN,
+        p.KODE_DEPARTEMEN,
         b.NAMA_BARANG,
         i.NAMA_UNIT,
         j.NAMA_JENIS,
@@ -141,7 +156,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
     order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit 100");
 }
 
-   function getState($progress, $readed, $hasil, $row){
+   function getState($progress, $readed, $hasil, $row, $DEP){
         if ($progress == 0){
             if ($readed == 0){
                 return '<span class="state state3">New</span>';
@@ -153,7 +168,11 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
              else {
                 return '<span class="state state1">InProgress</span>';
             }
-        } else if($hasil == 1){
+        }
+        else if ($DEP == $row['KODE_DEPARTEMEN'] && !isset($hasil)) {
+            return '<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=1"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=2"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=3"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=4"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=5"><img src="images/emptystar.png"></a>';
+        }
+         else if($hasil == 1){
             return '<img src="images/fullstar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png">';
         } else if($hasil == 2){
             return '<img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png">';
@@ -161,15 +180,17 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' )){
             return '<img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/emptystar.png"><img src="images/emptystar.png">';
         } else if($hasil == 4){
             return '<img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/emptystar.png">';
-        } else if($progress == 100){
+        } else if($hasil == 5){
             return '<img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/fullstar.png"><img src="images/fullstar.png">';
+        } else {
+            return '<img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png">';
         }
    }
 
    $data = array();
    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
 
-        $state = getState($row['PROGRESS'], $row['STATUS_READ'], $row['HASIL'],$row);
+        $state = getState($row['PROGRESS'], $row['STATUS_READ'], $row['HASIL'],$row, $KODE_DEPARTEMEN);
         array_push($data,array(
             "action" => '<div class="btn-group" style="margin-bottom:5px;">
             <button type="button" class="btn btn-primary btn-rounded mb5 dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
