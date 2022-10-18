@@ -4,7 +4,7 @@
 	ini_set('max_execution_time', 0); //300 seconds = 5 minutes
 	$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
 	$TGL = date("Y-m-d");
-	$mysqli = new mysqli("localhost","root","saya","maintenance");
+	$mysqli = new mysqli("192.168.10.167:3307","maintenance","maintenanceangka8","maintenance");
 	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 600)) // last request was more than 600sec or 10 minutes ago
 	{
 		unset($_SESSION["LOGINIDUS_MT"]); // unset $_SESSION variable for the run-time
