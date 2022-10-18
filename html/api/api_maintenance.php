@@ -72,29 +72,31 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
                 $search
        order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit $length offset $page");
 
-       $result2 = GetQuery(
-        "Select 
-            count(p.KODE_PERBAIKAN) jml
-           FROM t_perbaikan p
-           JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
-           LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
-           JOIN m_perusahaan h ON p.KODE_PERUSAHAAN = h.KODE_PERUSAHAAN
-           JOIN m_departemen d ON p.KODE_DEPARTEMEN = d.KODE_DEPARTEMEN
-           JOIN m_user u ON p.USER_REQ = u.KODE_USER
-           JOIN m_jenisbrg j ON b.KODE_JENIS = j.KODE_JENIS
-           left outer join (
-            select dp.KODE_PERBAIKAN,group_concat(mt.NAMA_TEKNISI) as NAMA_TEKNISI
-                from d_perbaikan dp  
-            left join m_teknisi mt on mt.KODE_TEKNISI  = dp.KODE_TEKNISI
-            where dp.STS_HAPUS = 0
-            group by dp.KODE_PERBAIKAN
-            ) tns on tns.KODE_PERBAIKAN = p.KODE_PERBAIKAN 
-          WHERE p.HASIL IS NULL and 
-                p.STATUS_HAPUS = 0 and 
-                b.KODE_JENIS = 2
-                $search
-       order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit 100");
-
+    //    $result2 = GetQuery(
+    //     "Select 
+    //         count(p.KODE_PERBAIKAN) jml
+    //        FROM t_perbaikan p
+    //        JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
+    //        LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
+    //        JOIN m_perusahaan h ON p.KODE_PERUSAHAAN = h.KODE_PERUSAHAAN
+    //        JOIN m_departemen d ON p.KODE_DEPARTEMEN = d.KODE_DEPARTEMEN
+    //        JOIN m_user u ON p.USER_REQ = u.KODE_USER
+    //        JOIN m_jenisbrg j ON b.KODE_JENIS = j.KODE_JENIS
+    //        left outer join (
+    //         select dp.KODE_PERBAIKAN,group_concat(mt.NAMA_TEKNISI) as NAMA_TEKNISI
+    //             from d_perbaikan dp  
+    //         left join m_teknisi mt on mt.KODE_TEKNISI  = dp.KODE_TEKNISI
+    //         where dp.STS_HAPUS = 0
+    //         group by dp.KODE_PERBAIKAN
+    //         ) tns on tns.KODE_PERBAIKAN = p.KODE_PERBAIKAN 
+    //       WHERE p.HASIL IS NULL and 
+    //             p.STATUS_HAPUS = 0 and 
+    //             b.KODE_JENIS = 2
+    //             $search
+    //    order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit 100");
+    //    $row = $result2->fetch(PDO::FETCH_ASSOC);
+    //    $jml = $row['jml'];
+    $jml = 100;
 } else {
 
     $result = 
@@ -134,26 +136,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
         b.KODE_JENIS = 2
     order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit $length offset $page");
 
-   $result2 = GetQuery("
-    Select 
-        count(p.KODE_PERBAIKAN) jml
-    FROM t_perbaikan p
-    JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
-    LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
-    JOIN m_perusahaan h ON p.KODE_PERUSAHAAN = h.KODE_PERUSAHAAN
-    JOIN m_departemen d ON p.KODE_DEPARTEMEN = d.KODE_DEPARTEMEN
-    JOIN m_user u ON p.USER_REQ = u.KODE_USER
-    JOIN m_jenisbrg j ON b.KODE_JENIS = j.KODE_JENIS
-    left outer join (
-    select dp.KODE_PERBAIKAN,group_concat(mt.NAMA_TEKNISI) as NAMA_TEKNISI
-        from d_perbaikan dp  
-    left join m_teknisi mt on mt.KODE_TEKNISI  = dp.KODE_TEKNISI
-    where dp.STS_HAPUS = 0
-    group by dp.KODE_PERBAIKAN
-    ) tns on tns.KODE_PERBAIKAN = p.KODE_PERBAIKAN 
-    WHERE p.HASIL IS NULL and 
-        p.STATUS_HAPUS = 0 and b.KODE_JENIS = 2
-    order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit 100");
+   $jml = 100;
 }
 
    function getState($progress, $readed, $hasil, $row, $DEP){
@@ -219,12 +202,12 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
 
         ));
    }
-$row = $result2->fetch(PDO::FETCH_ASSOC);
+
 
 $json_data = array(
     "draw" => isset($_POST['draw'])?intval($_POST['draw']):0,
-    "recordsTotal" => $row['jml'],
-    "recordsFiltered" => $row['jml'],
+    "recordsTotal" => $jml,
+    "recordsFiltered" => $jml,
     "data" => $data
 );
 
