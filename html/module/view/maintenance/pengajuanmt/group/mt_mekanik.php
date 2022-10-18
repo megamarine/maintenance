@@ -32,7 +32,7 @@ $result = GetQuery(
             p.STATUS_HAPUS = 0 and 
             (b.KODE_JENIS = 2 or p.KODE_DEPARTEMEN = '$KODE_DEPARTEMEN') and 
             date(p.TGL_START) between '$PERIODE' and '$PERIODE2' 
-   order by p.KODE_PERBAIKAN, p.TGL_START desc");
+   order by p.KODE_PERBAIKAN desc");
 
 while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
 {
