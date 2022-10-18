@@ -193,11 +193,11 @@ if (isset($_POST["cari"]))
         </div>
         <!--/ END modal-sm -->
         <div class="container-fluid">
-            <table id="example" class="display" style="width:100%">
+            <table id="example" class="display" style="width:120%">
                 <thead>
                     <tr>
                         <th>Opsi</th>
-                        <th>Status</th>
+                        <th style="width:75px">Status</th>
                         <th>Teknisi</th>
                         <th>Kode</th>
                         <th>Perusahaan</th>
@@ -211,7 +211,7 @@ if (isset($_POST["cari"]))
                 <tfoot>
                     <tr>
                         <th>Opsi</th>
-                        <th>Status</th>
+                        <th style="width:75px">Status</th>
                         <th>Teknisi</th>
                         <th>Kode</th>
                         <th>Perusahaan</th>
@@ -277,8 +277,9 @@ if (isset($_POST["cari"]))
                             {
                                 data: 'action',
                             },
-                            {data: 'state',
-                             width:'20%',
+                            {
+                             data: 'state',
+                             
                             },
                             {data: 'teknisi'},
                             {data: 'code'},
