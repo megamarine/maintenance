@@ -161,6 +161,8 @@ if(isset($_GET["KODE_PERBAIKAN"]))
         $JUMBAR = $_POST['JUMBAR'];
         $LOKASI = $_POST['LOKASI'];
         $KODE_UNIT = $_POST['KODE_UNIT'];
+        $JAM_START       = isset($_POST["JAM_START"]) ? $_POST["JAM_START"]: $JAM_START;
+        $DATE = $_POST["TGL_START"] . " " .  $JAM_START;
 
 
     $query = 
