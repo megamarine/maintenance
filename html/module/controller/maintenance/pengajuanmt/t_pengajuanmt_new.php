@@ -140,7 +140,8 @@ if(isset($_GET["KODE_PERBAIKAN"]))
             "t_userlog",
             "KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS",
             "'$ID_USER1','$IP_ADDRESS','$PC_NAME','$DINO','Maintenance','Tambah','Kode $KODE_PERBAIKAN'");
-
+            
+            echo "<script>alert('Data Has Been Update');</script>";
         } 
 } else if(isset($_POST["simpan"])) //PENGAJUAN BARU
 {

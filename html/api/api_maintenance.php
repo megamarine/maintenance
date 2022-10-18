@@ -170,7 +170,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
             }
         }
         else if ($DEP == $row['KODE_DEPARTEMEN'] && !isset($hasil)) {
-            return '<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=1"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=2"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=3"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=4"><img src="images/emptystar.png"></a>&nbsp<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=5"><img src="images/emptystar.png"></a>';
+            return '<a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=1"><img src="images/emptystar.png"></a><a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=2"><img src="images/emptystar.png"></a><a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=3"><img src="images/emptystar.png"></a><a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=4"><img src="images/emptystar.png"></a><a href="tambah_hasil_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&HASIL=5"><img src="images/emptystar.png"></a>';
         }
          else if($hasil == 1){
             return '<img src="images/fullstar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png"><img src="images/emptystar.png">';

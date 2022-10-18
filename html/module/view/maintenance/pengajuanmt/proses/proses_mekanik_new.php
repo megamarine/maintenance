@@ -283,6 +283,7 @@ $result4 = GetQuery("select *,
                                 $('#SARAN').val("");
                                 $('#DURASI').val("");
                                 $('#BAGIAN').val("");
+                                $("#STATUS_PERBAIKAN").val("");
                                 $('#datepicker1').val("");
                                 $('#datepicker2').val("");
                                 $('#time-picker').val("");

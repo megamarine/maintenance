@@ -4,7 +4,7 @@
 	ini_set('max_execution_time', 0); //300 seconds = 5 minutes
 	$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
 	$TGL = date("Y-m-d");
-
+	$mysqli = new mysqli("localhost","root","saya","maintenance");
 	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 600)) // last request was more than 600sec or 10 minutes ago
 	{
 		unset($_SESSION["LOGINIDUS_MT"]); // unset $_SESSION variable for the run-time
@@ -36,7 +36,6 @@
 
 		$result = $db1->prepare("select $kolom from $from") or trigger_error(mysql_error()); 
 		$result->execute();
-
 		return $result;
 	}
 
@@ -45,7 +44,6 @@
 
 		$result = $db1->prepare("select $kolom from $from where $where") or trigger_error(mysql_error()); 
 		$result->execute();
-
 		return $result;
 	}
 
@@ -64,7 +62,6 @@
 
 		$result = $db1->prepare("select $kolom from $from where $where order by $order") or trigger_error(mysql_error()); 
 		$result->execute();
-
 		return $result;
 	}
 
@@ -73,7 +70,6 @@
 
 		$result = $db1->prepare("select $kolom from $from where $where group by $group") or trigger_error(mysql_error()); 
 		$result->execute();
-
 		return $result;
 	}
 
@@ -82,7 +78,6 @@
 
 		$result = $db1->prepare("update $from set $kolom where $where") or trigger_error(mysql_error()); 
 		$result->execute();
-
 		return $result;
 	}
 
@@ -90,8 +85,7 @@
 		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
 
 		$result = $db1->prepare("insert into $table ($kolom) values ($values)") or trigger_error(mysql_error()); 
-		$result->execute();
-		
+		$result->execute();	
 		return $result;
 	}
 
@@ -100,8 +94,7 @@
 
 		$result = $db1->prepare("delete from $table where $where") or trigger_error(mysql_error()); 
 		$result->execute();
-		
-		return $result;
+				return $result;
 	}
 
 	function merge_queries(array $original, array $updates) {
