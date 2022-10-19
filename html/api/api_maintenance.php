@@ -70,7 +70,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
           WHERE p.HASIL IS NULL and 
                 p.STATUS_HAPUS = 0 and b.KODE_JENIS = 2
                 $search
-       order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit $length offset $page");
+       order by p.TGL_START desc, p.KODE_PERBAIKAN desc limit $length offset $page");
 
     //    $result2 = GetQuery(
     //     "Select 
@@ -134,7 +134,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
     WHERE p.HASIL IS NULL and 
         p.STATUS_HAPUS = 0 and 
         b.KODE_JENIS = 2
-    order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit $length offset $page");
+    order by p.TGL_START desc,p.KODE_PERBAIKAN desc limit $length offset $page");
 
    $jml = 100;
 }

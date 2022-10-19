@@ -3,7 +3,6 @@ $u                  = date("Ym");
 $DATE               = date("Y-m-d H:i:s");
 $TIME               = date("H:i:s");
 $DINO               = date('Y-m-d H:i:s');
-$KODE_PERBAIKAN     = createKode("t_perbaikan","KODE_PERBAIKAN","MT-$u-",4);
 $ID_USER1           = $_SESSION["LOGINIDUS_MT"];
 $IP_ADDRESS         = $_SESSION["IP_ADDRESS_MT"];
 $PC_NAME            = $_SESSION["PC_NAME_MT"];
@@ -149,6 +148,7 @@ if(isset($_GET["KODE_PERBAIKAN"]))
     "insert into t_userlog (KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS) 
     values ('$ID_USER1','$IP_ADDRESS','$PC_NAME','$DINO','Maintenance','Tambah Maintenance','User Menambah Maintenance dengan Kode $KODE_PERBAIKAN')";
 
+    $KODE_PERBAIKAN     = createKode("t_perbaikan","KODE_PERBAIKAN","MT-$u-",4);
     $mysqli->query($querylog);
 
         $KODE_PERUSAHAAN = $_POST["KODE_PERUSAHAAN"];
