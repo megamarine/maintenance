@@ -470,7 +470,7 @@ if (isset($_POST['reload_user'])){
         inner join m_departemen md on md.KODE_DEPARTEMEN = tp.KODE_DEPARTEMEN
         inner join m_barang mb2 on mb2.KODE_BARANG = tp.KODE_BARANG
         left outer join m_bagian mb on mb.KODE_BAGIAN = md.KODE_BAGIAN
-        left outer join m_user mu on (mu.KODE_BAGIAN = tp.BAGIAN or tp.KODE_DEPARTEMEN = mu.KODE_DEPARTEMEN) 
+        left outer join m_user mu on (mu.KODE_BAGIAN = tp.BAGIAN or tp.KODE_DEPARTEMEN = mu.KODE_DEPARTEMEN or tp.USER_REQ = mu.KODE_USER) 
             where tp.KODE_PERBAIKAN = '$kode' and mu.EMAIL is not null 
         limit 1
         ");
@@ -486,7 +486,10 @@ if (isset($_POST['reload_user'])){
             $mail->setFrom('no-reply@megamarinepride.com','no-reply maintenance');
             $emailArray = explode(";", $email);
             foreach ($emailArray as $email_user)  {
-                $mail->addAddress($email_user);    
+                if ($email_user == ""){
+                    $mail->addAddress($email_user);
+                }
+                
             }
             $mail->addCC('mechanic@megamarinepride.com');
             $mail->Subject = "Permintaan Pemeliharaan Barang " . $kode;
