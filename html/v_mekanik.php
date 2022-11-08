@@ -295,6 +295,10 @@ if (isset($_POST["cari"]))
                 $("#cari").click(function() {
                     table.ajax.reload();               
                 });
+
+               
+
+
             //reject Form        
                 $( "#form-reject" ).submit(function( event ) {
                     event.preventDefault();
@@ -347,7 +351,12 @@ if (isset($_POST["cari"]))
                 })
                 
                 $(document).on("click", ".refprint", function () {
-                    table.ajax.reload();    
+                   const id = $(this).data('id');
+                   var params = {id: $(this).data('id'), printed:1, state:$(this).data('state') };
+                   const prmt = $.param(params);
+                   location.assign("print_spk?"+prmt);
+                   setTimeout(table.ajax.reload(), 4000);
+                     
                 });
                 
                 $(document).on("click", ".open-AddBookDialog", function () {
@@ -365,9 +374,7 @@ if (isset($_POST["cari"]))
             })
 
             function refresh() {    
-                setTimeout(function () {
-                    location.reload()
-                }, 100);
+                $('#example').ajax.reload();
             }     
         
         </script>

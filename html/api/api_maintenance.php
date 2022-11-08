@@ -185,7 +185,7 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
                 <li><a data-toggle="modal" data-id="'.$row["KODE_PERBAIKAN"].'" data-toggle="modal" title="Add this item" class="open-AddBookDialog" href="#addBookDialog"><i class="fa fa-times fa-lg"></i> Tolak</a></li>
                 <li><a href="hapus_pengajuanmt_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'" onclick="return confirm(Hapus request ini ?)" style="color:red;"><i class="fa fa-trash fa-lg"></i> Hapus</a></li>
                 <li class="divider"></li>
-                <li><a onclick="refresh();" href="print_spk?id='.$row["KODE_PERBAIKAN"].'&amp;printed=1&amp;state='.$row['STATUS_READ'].'" target="_blank" style="color:brown;"><i class="fa fa-print fa-lg"></i> Cetak SPK</a></li>
+                <li><a data-id="'.$row["KODE_PERBAIKAN"].'"  data-state='.$row['STATUS_READ'].' target="_blank" class="refprint" style="color:brown;"><i class="fa fa-print fa-lg"></i> Cetak SPK</a></li>
                 </ul>
             </div>',
             "state" => $state,
