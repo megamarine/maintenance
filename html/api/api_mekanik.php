@@ -196,7 +196,7 @@ if (isset($_POST['reload_user'])){
      // Kode Teknisi
      if (isset($KODE_TEKNISI)) {
         $sth = GetQuery("select count(*) jml from d_perbaikan 
-            where KODE_PERBAIKAN='$KODE_PERBAIKAN' and KODE_TEKNISI='$KODE_TEKNISI' ");
+            where KODE_PERBAIKAN='$KODE_PERBAIKAN' and KODE_TEKNISI='$KODE_TEKNISI' and STS_HAPUS <> 1 ");
         $row = $sth->fetch(PDO::FETCH_ASSOC);
         if (!$row['jml']){
             GetQuery(
@@ -322,92 +322,6 @@ if (isset($_POST['reload_user'])){
                 DOWNTIME = (select time_format(TIMEDIFF(TGL_SELESAI,TGL_START),'%H.%i')) 
             where KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
                 
-            // require '../phpmailer/PHPMailerAutoload.php';
-            // set_time_limit(120); // set the time limit to 120 seconds
-
-            // $result = GetQuery(
-            //    "select  p.*,
-            //             DATE_FORMAT(p.TGL_START, '%Y-%m-%d') as TGL_START,
-            //             DATE_FORMAT(p.TGL_START, '%H:%i') as JAM_START,
-            //             DATE_FORMAT(p.TGL_END, '%Y-%m-%d') as TGL_END,
-            //             h.NAMA_PERUSAHAAN,
-            //             d.NAMA_DEPARTEMEN,
-            //             b.KODE_JENIS,
-            //             b.NAMA_BARANG,
-            //             w.NAMA_UNIT,
-            //             j.NAMA_JENIS,
-            //             d.KODE_BAGIAN,
-            //             g.NAMA_BAGIAN,
-            //             DATE_FORMAT(p.TGL_PERBAIKAN, '%Y-%m-%d') as TGL_PERBAIKAN,
-            //             DATE_FORMAT(TGL_PERBAIKAN, '%H:%i') as JAM_PERBAIKAN,
-            //             DATE_FORMAT(p.TGL_SELESAI, '%Y-%m-%d') as TGL_SELESAI,
-            //             DATE_FORMAT(TGL_SELESAI, '%H:%i') as JAM_SELESAI
-            //        from t_perbaikan p
-            //   LEFT JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
-            //   LEFT JOIN m_perusahaan h ON p.KODE_PERUSAHAAN = h.KODE_PERUSAHAAN
-            //   LEFT JOIN m_departemen d ON p.KODE_DEPARTEMEN = d.KODE_DEPARTEMEN
-            //   LEFT JOIN m_jenisbrg j ON b.KODE_JENIS = j.KODE_JENIS
-            //   LEFT JOIN m_bagian g ON d.KODE_BAGIAN = g.KODE_BAGIAN
-            //   LEFT JOIN m_unit w ON p.KODE_UNIT = w.KODE_UNIT 
-            //       WHERE p.KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
-
-            // while ($row = $result->fetch(PDO::FETCH_ASSOC)) 
-            // {
-            //     $KODE_PERUSAHAAN = $row["KODE_PERUSAHAAN"];
-            //     $NAMA_PERUSAHAAN = $row["NAMA_PERUSAHAAN"];
-            //     $KODE_BAGIAN     = $row["KODE_BAGIAN"];
-            //     $NAMA_BAGIAN     = $row["NAMA_BAGIAN"];
-            //     $KODE_DEPARTEMEN = $row["KODE_DEPARTEMEN"];
-            //     $NAMA_DEPARTEMEN = $row["NAMA_DEPARTEMEN"];
-            //     $KODE_BARANG     = $row["KODE_BARANG"];
-            //     $NAMA_BARANG     = $row["NAMA_BARANG"];
-            //     $NAMA_UNIT       = $row["NAMA_UNIT"];
-            //     $JUMBAR          = $row["JUMLAH_BARANG"];
-            //     $LOKASI          = $row["LOKASI"];
-            //     $STATUS_DOWNTIME = $row["STATUS_DOWNTIME"];
-            //     $KERUSAKAN       = $row["KERUSAKAN"];
-            //     $KETERANGAN      = $row["KETERANGAN"];
-            //     $SOLUSI          = $row["SOLUSI"];
-            //     $TGL_START       = $row["TGL_START"];
-            //     $JAM_START       = $row["JAM_START"];
-            //     $IP_ADD          = $row["IP_ADD"];
-            //     $PEMILIK         = $row["PEMILIK"];
-            //     $USER_MT         = $row["USER_MT"];
-            //     $SARAN           = $row["SARAN"];
-            // }
-
-            // if ($KODE_BAGIAN == "DIV-0030") {
-            //     $EMAILMAN = "junitalia@baramudabahari.com";
-            // }
-            // else{
-            //     $resultem2 = GetData1("EMAIL","m_user","KODE_BAGIAN = '$KODE_BAGIAN' and AKSES = 'Manajer'");
-            //     while ($rowem2 = $resultem2->fetch(PDO::FETCH_ASSOC)) {
-            //         $EMAILMAN  = $rowem2["EMAIL"];
-            //     }
-            // }
-
-            // $resultem3 = GetData1("EMAIL","m_user","KODE_DEPARTEMEN = '$KODE_DEPARTEMEN' and AKSES = 'Admin'");
-            // while ($rowem3 = $resultem3->fetch(PDO::FETCH_ASSOC)) {
-            //     $EMAILADM  = $rowem3["EMAIL"];
-            // }
-
-            // $resultjns = GetData1("KODE_JENIS","m_barang","KODE_BARANG = '$KODE_BARANG'");
-            // while ($rowJns  = $resultjns->fetch(PDO::FETCH_ASSOC)) {
-            //     $KODE_JENIS = $rowJns["KODE_JENIS"];
-            // }
-
-            // $mail = new PHPMailer;
-            // $mail->isSendmail();
-            // $mail->setFrom('no-reply@megamarinepride.com','no-reply maintenance');
-            
-            // $mail->addAddress($EMAILADM);
-            // $mail->addCC($EMAILMAN);
-            // $mail->addAddress('mechanic@megamarinepride.com');
-            
-            // $mail->Subject = "Permintaan Pemeliharaan Barang " . $KODE_PERBAIKAN;
-            // $mail->msgHTML("<br><br>======================================================================================<br>Perusahaan : " . $NAMA_PERUSAHAAN . " <br>Divisi : " . $NAMA_BAGIAN . " <br>Departemen : " . $NAMA_DEPARTEMEN . " <br>Tanggal Pengajuan: " . $TGL_START . " " . $JAM_START . " <br>Barang : " . $NAMA_BARANG . " <br>Unit : " . $NAMA_UNIT . " <br>IP Address : " . $IP_ADD . " <br>Pemilik : " . $PEMILIK . " <br>Kerusakan : " . $KERUSAKAN . " <br>Keterangan : " . $KETERANGAN . " <br><br>Hasil Pemeliharaan : " . $SOLUSI . " <br>User Pemeliharaan : " . $USER_MT . " <br>Saran : " . $SARAN . "<br><br>Status : Done<br><br>======================================================================================<br>please do not reply to this email <br>for more information, kindly visit <a href='192.168.0.167/maintenance'>maintenance.megamarinepride</a><br><br><br>Regards,<br>Mega Marine Pride");
-
-            // $mail->send();
         } catch(Exception $e){
             echo 'Message: ' .$e->getMessage();
         }
@@ -449,6 +363,26 @@ if (isset($_POST['reload_user'])){
         GetQuery(
             "update t_perbaikan 
             set STATUS_HAPUS = 1, SOLUSI = 'Alasan Penolakan : $KETERANGAN', PROGRESS = 100 where KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
+    
+        $data = array('status' => 'success');
+        echo json_encode($data);
+
+    } else if (isset($_POST['close'])){
+        $DINO        = date('Y-m-d H:i:s');
+        $ID_USER1    = $_SESSION["LOGINIDUS_MT"];
+        $IP_ADDRESS  = $_SESSION["IP_ADDRESS_MT"];
+        $PC_NAME     = $_SESSION["PC_NAME_MT"];
+        $SHIFT_ID     = $_POST["shiftId"];
+        $KODE_PERBAIKAN = $_POST["KODE_PERBAIKAN"];
+        
+        GetQuery(
+            "insert into t_userlog (KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS) 
+            values ('$ID_USER1','$IP_ADDRESS','$PC_NAME','$DINO','Maintenance','Tutup Maintenance','User Menutup Maintenance dengan Kode $KODE_PERBAIKAN')");
+    
+        GetQuery(
+            "update t_perbaikan 
+                set SHIFT = '$SHIFT_ID', STATUS = '1' 
+                where KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
     
         $data = array('status' => 'success');
         echo json_encode($data);

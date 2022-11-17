@@ -2,9 +2,9 @@
 	session_start();
 	ini_set("date.timezone","Asia/Jakarta");
 	ini_set('max_execution_time', 0); //300 seconds = 5 minutes
-	$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+	$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 	$TGL = date("Y-m-d");
-	$mysqli = new mysqli("192.168.10.167:3307","maintenance","maintenanceangka8","maintenance");
+	$mysqli = new mysqli("localhost:3306","root","saya","maintenance");
 	if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > 600)) // last request was more than 600sec or 10 minutes ago
 	{
 		unset($_SESSION["LOGINIDUS_MT"]); // unset $_SESSION variable for the run-time
@@ -16,7 +16,7 @@
 	// generate autonumber
 	function kodeAuto($namatabel,$namakolom)
 	{
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$akhir = 0;
 		$stmt = $db1->query("select max($namakolom) as akhir from $namatabel");
@@ -32,7 +32,7 @@
 	}
 
 	function GetData($kolom,$from){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("select $kolom from $from") or trigger_error(mysql_error()); 
 		$result->execute();
@@ -40,7 +40,7 @@
 	}
 
 	function GetData1($kolom,$from,$where){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("select $kolom from $from where $where") or trigger_error(mysql_error()); 
 		$result->execute();
@@ -49,7 +49,7 @@
 
 	// QUery Mysql
 	function GetQuery($query){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare($query) or trigger_error(mysql_error()); 
 		$result->execute();
@@ -58,7 +58,7 @@
 	}
 
 	function GetDataOrder($kolom,$from,$where,$order){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("select $kolom from $from where $where order by $order") or trigger_error(mysql_error()); 
 		$result->execute();
@@ -66,7 +66,7 @@
 	}
 
 	function GetDataGroup($kolom,$from,$where,$group){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("select $kolom from $from where $where group by $group") or trigger_error(mysql_error()); 
 		$result->execute();
@@ -74,7 +74,7 @@
 	}
 
 	function UpdateData($from,$kolom,$where){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("update $from set $kolom where $where") or trigger_error(mysql_error()); 
 		$result->execute();
@@ -82,7 +82,7 @@
 	}
 
 	function InsertData($table,$kolom,$values){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("insert into $table ($kolom) values ($values)") or trigger_error(mysql_error()); 
 		$result->execute();	
@@ -90,7 +90,7 @@
 	}
 
 	function DeleteData($table,$where){
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 
 		$result = $db1->prepare("delete from $table where $where") or trigger_error(mysql_error()); 
 		$result->execute();
@@ -104,8 +104,9 @@
 
 	function createKode($namaTabel,$namaKolom,$awalan,$jumlahAngka)
 	{
-		$db1 = new PDO('mysql:host=192.168.10.167:3307;dbname=maintenance', 'maintenance', 'maintenanceangka8');
+		$db1 = new PDO('mysql:host=localhost:3306;dbname=maintenance', 'root', 'saya');
 		$angkaAkhir = 0;
+		
 		$stmt = $db1->query("select max(right($namaKolom,$jumlahAngka)) as akhir from $namaTabel where $namaKolom like '".$awalan."%' ");
 		while($row = $stmt->fetch(PDO::FETCH_ASSOC))
 		{

@@ -144,11 +144,11 @@ if(isset($_GET["KODE_PERBAIKAN"]))
         } 
 } else if(isset($_POST["simpan"])) //PENGAJUAN BARU
 {
+    $KODE_PERBAIKAN     = createKode("t_perbaikan","KODE_PERBAIKAN","MT-$u-",4);
     $querylog = 
     "insert into t_userlog (KODE_USER,IP_ADDRESS,PC_NAME,TANGGAL,MODUL,JENIS_LOG,AKTIVITAS) 
     values ('$ID_USER1','$IP_ADDRESS','$PC_NAME','$DINO','Maintenance','Tambah Maintenance','User Menambah Maintenance dengan Kode $KODE_PERBAIKAN')";
 
-    $KODE_PERBAIKAN     = createKode("t_perbaikan","KODE_PERBAIKAN","MT-$u-",4);
     $mysqli->query($querylog);
 
         $KODE_PERUSAHAAN = $_POST["KODE_PERUSAHAAN"];

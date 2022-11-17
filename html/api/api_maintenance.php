@@ -32,6 +32,10 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
             $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS_READ = 1";
         } elseif ($state == 'pending') {
             $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS_READ = 3";
+        } elseif ($state == 'close') {
+            $search = $search." and (p.PROGRESS = 0 or p.PROGRESS is null) and p.STATUS = 1";
+        } elseif ($state == 'finish') {
+            $search = $search." and (p.PROGRESS > 0) and p.STATUS = 1";
         }
     }
 
@@ -72,30 +76,6 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
                 $search
        order by p.TGL_START desc, p.KODE_PERBAIKAN desc limit $length offset $page");
 
-    //    $result2 = GetQuery(
-    //     "Select 
-    //         count(p.KODE_PERBAIKAN) jml
-    //        FROM t_perbaikan p
-    //        JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
-    //        LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
-    //        JOIN m_perusahaan h ON p.KODE_PERUSAHAAN = h.KODE_PERUSAHAAN
-    //        JOIN m_departemen d ON p.KODE_DEPARTEMEN = d.KODE_DEPARTEMEN
-    //        JOIN m_user u ON p.USER_REQ = u.KODE_USER
-    //        JOIN m_jenisbrg j ON b.KODE_JENIS = j.KODE_JENIS
-    //        left outer join (
-    //         select dp.KODE_PERBAIKAN,group_concat(mt.NAMA_TEKNISI) as NAMA_TEKNISI
-    //             from d_perbaikan dp  
-    //         left join m_teknisi mt on mt.KODE_TEKNISI  = dp.KODE_TEKNISI
-    //         where dp.STS_HAPUS = 0
-    //         group by dp.KODE_PERBAIKAN
-    //         ) tns on tns.KODE_PERBAIKAN = p.KODE_PERBAIKAN 
-    //       WHERE p.HASIL IS NULL and 
-    //             p.STATUS_HAPUS = 0 and 
-    //             b.KODE_JENIS = 2
-    //             $search
-    //    order by p.KODE_PERBAIKAN desc, p.TGL_START desc limit 100");
-    //    $row = $result2->fetch(PDO::FETCH_ASSOC);
-    //    $jml = $row['jml'];
     $jml = 100;
 } else {
 
@@ -116,7 +96,9 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
         i.NAMA_UNIT,
         j.NAMA_JENIS,
         d.KODE_BAGIAN,
-        u.NAMA_USER
+        u.NAMA_USER,
+        p.SHIFT,    
+        p.STATUS
     FROM t_perbaikan p
     JOIN m_barang b ON p.KODE_BARANG = b.KODE_BARANG
     LEFT JOIN m_unit i ON p.KODE_UNIT = i.KODE_UNIT
@@ -141,7 +123,10 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
 
    function getState($progress, $readed, $hasil, $row, $DEP){
         if ($progress == 0){
-            if ($readed == 0){
+            if ($row['STATUS'] == 1){
+                return '<span class="state state2">Close</span>';
+            }
+            else if ($readed == 0){
                 return '<span class="state state3">New</span>';
             } else if($readed == 2){
                 return '<span class="state state1">Confirm</span>';
@@ -172,13 +157,15 @@ if (!empty($_REQUEST['search']['value']) or ($awal != '' && $akhir != '' ) or ($
 
    $data = array();
    while ($row = $result->fetch(PDO::FETCH_ASSOC)) {
-
-        $state = getState($row['PROGRESS'], $row['STATUS_READ'], $row['HASIL'],$row, $KODE_DEPARTEMEN);
+        
+        $state = getState($row['PROGRESS'], $row['STATUS_READ'], $row['HASIL'], $row, $KODE_DEPARTEMEN);
+        $element = '<li><a data-toggle="modal" data-shift="'.$row["SHIFT"].'" data-id="'.$row["KODE_PERBAIKAN"].'" data-toggle="modal" title="Add this item" class="open-AddBookDialogClose" href="#addBookDialogClose" style="color:blue;"><i class="fa fa-thin fa-check"></i> Close</a></li>';
         array_push($data,array(
             "action" => '<div class="btn-group" style="margin-bottom:5px;">
             <button type="button" class="btn btn-primary btn-rounded mb5 dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
             <ul class="dropdown-menu" role="menu">
                 <li><a href="proses_pengajuan_mekanik?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'" style="color:green;"><i class="fa fa-share fa-lg"></i> Proses</a></li>
+                '.$element.'
                 <li><a href="tambah_pengajuanmt_new?KODE_PERBAIKAN='.$row["KODE_PERBAIKAN"].'&amp;edit=1" style="color:black;"><i class="fa fa-edit fa-lg"></i> Edit</a></li>
                 <li><a data-toggle="modal" data-id='.$row["KODE_PERBAIKAN"].' data-ket2='.str_replace(" ","&nbsp;",$row['KETERANGAN2']).' data-est='.str_replace(" ","&nbsp;",$row['ESTIMASI']).' data-style="color:brown;" data-toggle="modal" title="Add this item" class="open-AddBookDialog2" href="#addBookDialog2"><i class="fa fa-hourglass-half fa-lg"></i> Pending</a></li>
                 <li class="divider"></li>

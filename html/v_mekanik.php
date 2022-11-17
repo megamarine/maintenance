@@ -115,6 +115,8 @@ if (isset($_POST["cari"]))
                             <option value="confirm">Confrim (Has Print)</option>
                             <option value="progress">Progress</option>
                             <option value="pending">Pending</option>
+                            <option value="close">Close</option>
+                            <option value="finish">Finish</option>
                         </select>
                 </div>
                 <div class="form-group">
@@ -186,6 +188,37 @@ if (isset($_POST["cari"]))
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-undo fa-lg"></i> Batal</button>
                             <button type="submit" name="save-reject" class="btn btn-primary"><i class="fa fa-save fa-lg"></i> Simpan</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="addBookDialogClose" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <form id="form-close" role="form" action="" method="post" data-parsley-validate>
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header text-center">
+                            <button type="button" class="close" data-dismiss="modal">×</button>
+                            <h3 class="semibold modal-title text-success">Close Maintenace</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="shift">Shift <span class="text-danger">*</span></label>
+                                <select name="shift" id="shift">
+                                    <option value="0">Non Shift</option>
+                                    <option value="1">Shift 1</option>
+                                    <option value="2">Shift 2</option>
+                                    <option value="3">Shift 3</option>
+                                </select>
+                            </div>  
+                            <div class="form-group hidden">
+                                <input type="text" required="" id="KODE_PERBAIKAN" name="KODE_PERBAIKAN" />
+                            </div>      
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-undo fa-lg"></i> Batal</button>
+                            <button type="submit" name="simpan" class="btn btn-primary"><i class="fa fa-save fa-lg"></i> Simpan</button>
                         </div>
                     </div>
                 </div>
@@ -349,6 +382,23 @@ if (isset($_POST["cari"]))
                             $('#addBookDialog').modal('hide');
                         });
                 })
+            //form Close
+                $("#form-close").submit(function(event){
+                    event.preventDefault();
+                    $.ajax({
+                        type: 'POST',
+                        url: 'api/api_mekanik',
+                        dataType: 'json',
+                        data: {
+                            close: true,
+                            shiftId: $("#shift").val(),
+                            KODE_PERBAIKAN: $('#KODE_PERBAIKAN').val(),
+                        }
+                    }).done(function(data){
+                        table.ajax.reload();
+                        $('#addBookDialogClose').modal('hide');
+                    })
+                })
                 
                 $(document).on("click", ".refprint", function () {
                    const id = $(this).data('id');
@@ -363,6 +413,14 @@ if (isset($_POST["cari"]))
                     var myBookId = $(this).data('id');
                     $(".modal-body #KODE_PERBAIKAN").val( myBookId );
                 });
+
+                $(document).on("click",".open-AddBookDialogClose", function ()
+                    {
+                        const mainId = $(this).data('id');
+                        const shiftId = $(this).data('shift');
+                        $(".modal-body #KODE_PERBAIKAN").val( mainId );
+                    }
+                );
                 $(document).on("click", ".open-AddBookDialog2", function () {
                     var myBookId2 = $(this).data('id');
                     const ket2 = $(this).data('ket2').replace(/\u00a0/g, " ");
