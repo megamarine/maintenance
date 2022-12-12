@@ -8,6 +8,7 @@ if($_SESSION["LOGINIDUS_MT"] == "002028" OR //Imam Fatoni
    $_SESSION["LOGINIDUS_MT"] == "393686" OR //Endang S
    $_SESSION["LOGINIDUS_MT"] == "412412" OR //Fathul Mubin
    $_SESSION["LOGINIDUS_MT"] == "411669" OR //Whina Septi
+   $_SESSION["LOGINIDUS_MT"] == "427591" OR //Okky
    $_SESSION["LOGINIDUS_MT"] == "015036" OR //Nyoto Susilo -> Civil Engineering
    $_SESSION["LOGINDEP_MT"] == "DEPT-0033") //dept IT
 {
