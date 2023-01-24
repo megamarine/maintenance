@@ -78,7 +78,7 @@ else{
         $EMAILMAN = $rowem2["EMAIL"];
     }
 }
-
+/* remark husni email
 $mail = new PHPMailer;
 // Set PHPMailer to use the sendmail transport
 $mail->isSendmail();
@@ -101,4 +101,5 @@ $mail->msgHTML("<br><br>========================================================
 //Attach an image file
 $mail->send();
 // END EMAIL
+*/
 ?>

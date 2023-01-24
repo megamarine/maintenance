@@ -388,52 +388,55 @@ if (isset($_POST['reload_user'])){
         echo json_encode($data);
 
     } elseif(isset($_POST['send_mail'])){
+        return true
 
-        $kode = $_POST['KODE_PERBAIKAN'];
-        $state = $_POST['STATE'];
-        $obj = GetQuery("
-        select 
-            mb.NAMA_BAGIAN bagian,
-            mp.NAMA_PERUSAHAAN perusahaan,
-            mb2.NAMA_BARANG barang,
-            tp.KERUSAKAN rusak,
-            md.NAMA_DEPARTEMEN departemen,
-            group_concat(mu.EMAIL separator ';') email
-        from t_perbaikan tp 
-        inner join m_perusahaan mp  on mp.KODE_PERUSAHAAN  = tp.KODE_PERUSAHAAN 
-        inner join m_departemen md on md.KODE_DEPARTEMEN = tp.KODE_DEPARTEMEN
-        inner join m_barang mb2 on mb2.KODE_BARANG = tp.KODE_BARANG
-        left outer join m_bagian mb on mb.KODE_BAGIAN = md.KODE_BAGIAN
-        left outer join m_user mu on (mu.KODE_BAGIAN = tp.BAGIAN or tp.KODE_DEPARTEMEN = mu.KODE_DEPARTEMEN or tp.USER_REQ = mu.KODE_USER) 
-            where tp.KODE_PERBAIKAN = '$kode' and mu.EMAIL is not null 
-        limit 1
-        ");
+    //     $kode = $_POST['KODE_PERBAIKAN'];
+    //     $state = $_POST['STATE'];
+    //     $obj = GetQuery("
+    //     select 
+    //         mb.NAMA_BAGIAN bagian,
+    //         mp.NAMA_PERUSAHAAN perusahaan,
+    //         mb2.NAMA_BARANG barang,
+    //         tp.KERUSAKAN rusak,
+    //         md.NAMA_DEPARTEMEN departemen,
+    //         group_concat(mu.EMAIL separator ';') email
+    //     from t_perbaikan tp 
+    //     inner join m_perusahaan mp  on mp.KODE_PERUSAHAAN  = tp.KODE_PERUSAHAAN 
+    //     inner join m_departemen md on md.KODE_DEPARTEMEN = tp.KODE_DEPARTEMEN
+    //     inner join m_barang mb2 on mb2.KODE_BARANG = tp.KODE_BARANG
+    //     left outer join m_bagian mb on mb.KODE_BAGIAN = md.KODE_BAGIAN
+    //     left outer join m_user mu on (mu.KODE_BAGIAN = tp.BAGIAN or tp.KODE_DEPARTEMEN = mu.KODE_DEPARTEMEN or tp.USER_REQ = mu.KODE_USER) 
+    //         where tp.KODE_PERBAIKAN = '$kode' and mu.EMAIL is not null 
+    //     limit 1
+    //     ");
 
-       $row = $obj -> fetch();
-       $email = $row['email'];
+    //    $row = $obj -> fetch();
+    //    $email = $row['email'];
         
-       require '../phpmailer/PHPMailerAutoload.php';
-       set_time_limit(120); // set the time limit to 120 seconds
-       try {
-            $mail = new PHPMailer;
-            $mail->isSendmail();
-            $mail->setFrom('no-reply@megamarinepride.com','no-reply maintenance');
-            $emailArray = explode(";", $email);
-            foreach ($emailArray as $email_user)  {
-                if ($email_user == ""){
-                    $mail->addAddress($email_user);
-                }
+    //    require '../phpmailer/PHPMailerAutoload.php';
+    //    set_time_limit(120); // set the time limit to 120 seconds
+    //    try {
+    //         $mail = new PHPMailer;
+    //         $mail->isSendmail();
+    //         $mail->setFrom('no-reply@megamarinepride.com','no-reply maintenance');
+    //         $emailArray = explode(";", $email);
+    //         foreach ($emailArray as $email_user)  {
+    //             if ($email_user == ""){
+    //                 $mail->addAddress($email_user);
+    //             }
                 
-            }
-            $mail->addCC('mechanic@megamarinepride.com');
-            $mail->Subject = "Permintaan Pemeliharaan Barang " . $kode;
-            $mail->msgHTML("<br><br>======================================================================================<br>Perusahaan : " . $row['perusahaan'] . " <br>Divisi : " . $row['bagian'] . " <br>Departemen : " . $row['departemen'] ." <br>Barang : " . $row['barang']. " <br>Kerusakan : " . $row['rusak'] . " <br><br><br>Status : ". $state . " <br><br>======================================================================================<br>please do not reply to this email <br>for more information, kindly visit <a href='192.168.0.167/maintenance'>maintenance.megamarinepride</a><br><br><br>Regards,<br>Mega Marine Pride");
-            $mail->Send();
-            echo "ok";
-        } catch (phpmailerException $e) {
-        echo $e->errorMessage(); //Pretty error messages from PHPMailer
-      } catch (Exception $e) {
-        echo $e->getMessage(); //Boring error messages from anything else!
-      }
+    //         }
+    //         $mail->addCC('mechanic@megamarinepride.com');
+    //         $mail->Subject = "Permintaan Pemeliharaan Barang " . $kode;
+    //         $mail->msgHTML("<br><br>======================================================================================<br>Perusahaan : " . $row['perusahaan'] . " <br>Divisi : " . $row['bagian'] . " <br>Departemen : " . $row['departemen'] ." <br>Barang : " . $row['barang']. " <br>Kerusakan : " . $row['rusak'] . " <br><br><br>Status : ". $state . " <br><br>======================================================================================<br>please do not reply to this email <br>for more information, kindly visit <a href='192.168.0.167/maintenance'>maintenance.megamarinepride</a><br><br><br>Regards,<br>Mega Marine Pride");
+    //         $mail->Send();
+    //         echo "ok";
+    //     } catch (phpmailerException $e) {
+    //     echo $e->errorMessage(); 
+        
+    //     //Pretty error messages from PHPMailer
+    //   } catch (Exception $e) {
+    //     echo $e->getMessage(); //Boring error messages from anything else!
+    //   }
     }
 ?>

@@ -345,24 +345,25 @@ if (isset($_POST["cari"]))
                                 ESTIMASI: $('#ESTIMASI').val(),
                                 KODE_PERBAIKAN: $('#KODE_PERBAIKAN').val(),
                             }
-                        }).done(function(data) {
-                            table.ajax.reload();
-                            $('#addBookDialog2').modal('hide');
-                            $.ajax({
-                                type: 'POST',
-                                url: 'api/api_mekanik',
-                                data: {
-                                    send_mail: true,
-                                    KODE_PERBAIKAN: $('#KODE_PERBAIKAN').val(),
-                                    STATE: "Pending",
-                                }
-                            }).done(function(data){
-                                console.log(data);
-                            }).fail(function (jqXHR, textStatus, error) {
-                                // Handle error here
-                                console.log(error);
-                            });
-                        });
+                        })
+                        // .done(function(data) {
+                        //     table.ajax.reload();
+                        //     $('#addBookDialog2').modal('hide');
+                        //     $.ajax({
+                        //         type: 'POST',
+                        //         url: 'api/api_mekanik',
+                        //         data: {
+                        //             send_mail: true,
+                        //             KODE_PERBAIKAN: $('#KODE_PERBAIKAN').val(),
+                        //             STATE: "Pending",
+                        //         }
+                        //     }).done(function(data){
+                        //         console.log(data);
+                        //     }).fail(function (jqXHR, textStatus, error) {
+                        //         // Handle error here
+                        //         console.log(error);
+                        //     });
+                        // });
                 });
 
             //tolak Form    

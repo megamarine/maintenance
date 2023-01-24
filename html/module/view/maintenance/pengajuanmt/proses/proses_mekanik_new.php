@@ -323,7 +323,8 @@ $result4 = GetQuery("select *,
                         type: "POST",
                         url: 'api/api_mekanik',
                         data: $.param(form), // serializes the form's elements.
-                    }).done(function(data) {
+                    })
+                    .done(function(data) {
                         $.ajax({
                                 type: 'POST',
                                 url: 'api/api_mekanik',

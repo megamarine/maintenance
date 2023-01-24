@@ -256,6 +256,7 @@ $pdf->Output("pdf/Laporan ".$KODE_PTK.".pdf","F");
 	 */
 	//Import the PHPMailer class into the global namespace
 	// use phpmailer;
+	/* remark email husni
 	require_once("module/model/koneksi/koneksi.php");
 	require 'phpmailer/PHPMailerAutoload.php';
 	//Create a new PHPMailer instance
@@ -300,7 +301,7 @@ $pdf->Output("pdf/Laporan ".$KODE_PTK.".pdf","F");
 	$mail->addAttachment("pdf/Laporan " . $KODE_PTK . ".pdf");
 	$mail->send();
     // END EMAIL
-
+	*/
 	?><script>document.location.href='pengajuanptk.php';</script><?php
 	die(0);
 ?>

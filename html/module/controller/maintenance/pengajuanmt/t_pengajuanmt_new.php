@@ -175,6 +175,7 @@ if(isset($_GET["KODE_PERBAIKAN"]))
     $mysqli->query($query);
 
     // send Email
+    /* remark husni email error
      require_once("module/model/koneksi/koneksi.php");
      require 'phpmailer/PHPMailerAutoload.php';
 
@@ -248,6 +249,7 @@ if(isset($_GET["KODE_PERBAIKAN"]))
         } catch (Exception $e) {
             echo $e->getMessage(); //Boring error messages from anything else!
         }
+        end remark */
     echo "<script>document.location.href='v_mekanik';</script>";
 }
 $mysqli->close();

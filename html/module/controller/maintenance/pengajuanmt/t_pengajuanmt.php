@@ -248,6 +248,7 @@ if(isset($_GET["KODE_PERBAIKAN"]))
                 "KODE_PERBAIKAN = '$KODE_PERBAIKAN'");
         }
 
+        /* remark husni email
         require_once("module/model/koneksi/koneksi.php");
         require 'phpmailer/PHPMailerAutoload.php';
         set_time_limit(120); // set the time limit to 120 seconds
@@ -345,6 +346,8 @@ if(isset($_GET["KODE_PERBAIKAN"]))
         $mail->msgHTML("<br><br>======================================================================================<br>Perusahaan : " . $NAMA_PERUSAHAAN . " <br>Divisi : " . $NAMA_BAGIAN . " <br>Departemen : " . $NAMA_DEPARTEMEN . " <br>Tanggal Pengajuan: " . $TGL_START . " " . $JAM_START . " <br>Barang : " . $NAMA_BARANG . " <br>Unit : " . $NAMA_UNIT . " <br>IP Address : " . $IP_ADD . " <br>Pemilik : " . $PEMILIK . " <br>Kerusakan : " . $KERUSAKAN . " <br>Keterangan : " . $KETERANGAN . " <br><br>Hasil Pemeliharaan : " . $SOLUSI . " <br>User Pemeliharaan : " . $USER_MT . " <br>Saran : " . $SARAN . "<br><br>Status : Done<br><br>======================================================================================<br>please do not reply to this email <br>for more information, kindly visit <a href='192.168.0.167/maintenance'>maintenance.megamarinepride</a><br><br><br>Regards,<br>Mega Marine Pride");
 
         $mail->send()
+        end remark
+        */
         ?>
         <script>document.location.href='pengajuanmt';</script><?php
         die(0);
@@ -600,7 +603,7 @@ if(isset($_POST["simpan"]))
             $EMAILMAN = $rowem2["EMAIL"];
         }
     }
-
+    /* remark husni email
     $mail = new PHPMailer;
     $mail->isSendmail();
     $mail->setFrom('no-reply@megamarinepride.com','no-reply maintenance');
@@ -619,7 +622,8 @@ if(isset($_POST["simpan"]))
     $mail->Subject = "Permintaan Pemeliharaan Barang " . $KODE_PERBAIKAN;
     $mail->msgHTML("<br><br>======================================================================================<br>Perusahaan : " . $NAMA_PERUSAHAAN . " <br>Divisi : " . $NAMA_BAGIAN . " <br>Departemen : " . $NAMA_DEPARTEMEN . " <br>Tanggal Pengajuan: " . $TGL_START . " " . $JAM_START . " <br>Barang : " . $NAMA_BARANG . " <br>Unit : " . $NAMA_UNIT . " <br>IP Address : " . $IP_ADD . " <br>Pemilik : " . $PEMILIK . " <br>Kerusakan : " . $KERUSAKAN . " <br>Keterangan : " . $KETERANGAN . "<br><br>Status : In Progress<br><br>======================================================================================<br>please do not reply to this email <br>for more information, kindly visit <a href='192.168.0.167/maintenance'>maintenance.megamarinepride</a><br><br><br>Regards,<br>Mega Marine Pride");
     $mail->send()
-    
+    end remark
+    */
     ?>
     <script>document.location.href='pengajuanmt';</script>
     <?php
